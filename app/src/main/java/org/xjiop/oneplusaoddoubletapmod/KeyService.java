@@ -9,7 +9,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 public class KeyService extends AccessibilityService {
 
-    private final String TAG = "KeyService";
+    private final String TAG = "DBG | KeyService";
 
     private long CLICK_DELAY;
 
@@ -32,7 +32,7 @@ public class KeyService extends AccessibilityService {
         if(event.getKeyCode() == KeyEvent.KEYCODE_F4)
             result = doubleClick();
 
-        return result;
+        return result || super.onKeyEvent(event);
     }
 
     private boolean doubleClick() {
@@ -47,7 +47,7 @@ public class KeyService extends AccessibilityService {
 
             PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
             if(powerManager != null) {
-                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, getPackageName() + ":double_tap");
+                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |  PowerManager.SCREEN_DIM_WAKE_LOCK, getPackageName() + ":double_tap");
                 wakeLock.acquire(500L);
                 wakeLock.release();
             }
