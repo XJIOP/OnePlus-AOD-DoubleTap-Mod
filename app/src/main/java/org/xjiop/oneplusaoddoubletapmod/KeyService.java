@@ -12,6 +12,14 @@ public class KeyService extends AccessibilityService {
     private final String TAG = "DBG | KeyService";
 
     private long CLICK_DELAY;
+    private PowerManager powerManager;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -26,10 +34,12 @@ public class KeyService extends AccessibilityService {
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
         //Log.d(TAG, "onKeyEvent: " + event);
+        //Log.d(TAG, "isScreenOn: " + powerManager.isInteractive());
 
         boolean result = false;
+        boolean isScreenOn = powerManager != null && powerManager.isInteractive();
 
-        if(event.getKeyCode() == KeyEvent.KEYCODE_F4)
+        if(!isScreenOn && event.getKeyCode() == KeyEvent.KEYCODE_F4)
             result = doubleClick();
 
         return result || super.onKeyEvent(event);
@@ -37,10 +47,11 @@ public class KeyService extends AccessibilityService {
 
     private boolean doubleClick() {
 
-        boolean result;
+        boolean result = false;
 
         long thisTime = System.currentTimeMillis();
         if ((thisTime - CLICK_DELAY) < 250) {
+            //Log.d(TAG, "doubleClick");
 
             CLICK_DELAY = -1;
             result = true;
@@ -54,10 +65,7 @@ public class KeyService extends AccessibilityService {
         }
         else {
             CLICK_DELAY = thisTime;
-            result = false;
         }
-
-        //Log.d(TAG, "doubleClick: " + result);
 
         return result;
     }
