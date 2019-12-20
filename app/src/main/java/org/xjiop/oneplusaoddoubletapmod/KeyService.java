@@ -13,12 +13,16 @@ public class KeyService extends AccessibilityService {
 
     private long CLICK_DELAY;
     private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if(powerManager != null) {
+            wakeLock = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, getPackageName() + ":double_tap");
+        }
     }
 
     @Override
@@ -56,9 +60,7 @@ public class KeyService extends AccessibilityService {
             CLICK_DELAY = -1;
             result = true;
 
-            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if(powerManager != null) {
-                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |  PowerManager.SCREEN_DIM_WAKE_LOCK, getPackageName() + ":double_tap");
+            if(wakeLock != null) {
                 wakeLock.acquire(500L);
                 wakeLock.release();
             }
