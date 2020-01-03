@@ -7,3 +7,6 @@ Always on Display (AOD) Double Tap to Lock Screen
 - In display settings need enable option -> Ambient display -> Tap the screen to show
 - Now one tap it shows AOD, double tap from AOD to show screen lock
 - Enjoy!
+
+**Continue of this mod you can find here**  
+https://github.com/XJIOP/Oxygen-AOD-Mod
